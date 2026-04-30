@@ -1,4 +1,4 @@
-package com.pranay;
+package com.SpringAI;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.google.genai.GoogleGenAiChatModel;
@@ -8,19 +8,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/Gemini")
+@RequestMapping("/api/get-responce")
 @CrossOrigin("*")
-public class GeminiController {
+public class GenAIController {
 
     private ChatClient chatClient;
 
-    public GeminiController(GoogleGenAiChatModel chatModel){
+    public GenAIController(GoogleGenAiChatModel chatModel){
         this.chatClient = ChatClient.create(chatModel);
     }
 
-    @GetMapping("/{message}")
-    public ResponseEntity<String> getAnswer(@PathVariable String message){
-        String response = chatClient.prompt(message).call().content();
+    @Autowired
+    private GenAIService genAIService;
+
+    @GetMapping()
+    public ResponseEntity<String> getAnswer(@RequestBody String message){
+        String response = genAIService.getResponse(message);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
