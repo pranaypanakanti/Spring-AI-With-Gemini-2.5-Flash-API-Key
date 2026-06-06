@@ -1,0 +1,25 @@
+services:
+  kafka:
+    image: apache/kafka:3.8.0
+    ports:
+      - "9092:9092"
+    environment:
+      # --- KRaft: this node is both broker and controller ---
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+
+      # --- Listeners ---
+      # PLAINTEXT → your Spring Boot app connects here (port 9092)
+      # CONTROLLER → internal KRaft coordination only (port 9093)
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      # This is the address Kafka advertises to clients.
+      # Without this, Kafka advertises its internal Docker hostname
+      # and your Spring Boot app cannot reach it.
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+
+      # Single broker → replication factor must be 1.
+      # Without this you get a noisy warning loop on startup.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

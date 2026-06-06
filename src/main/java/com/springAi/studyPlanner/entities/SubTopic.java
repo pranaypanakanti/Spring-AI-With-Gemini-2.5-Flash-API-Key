@@ -1,4 +1,4 @@
-package com.SpringAI.studyPlanner.entities;
+package com.springAi.studyPlanner.entities;
 public class SubTopic {
 
     private String subTopicName;

@@ -1,4 +1,4 @@
-package com.SpringAI;
+package com.springAi;
 
 
 import org.springframework.boot.SpringApplication;
