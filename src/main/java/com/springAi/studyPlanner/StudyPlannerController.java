@@ -15,10 +15,10 @@ public class StudyPlannerController {
     private StudyPlanService studyPlanService;
 
     @GetMapping("/plan")
-    public StudyPlanResponse studyPlanner(@RequestParam(value = "topic", defaultValue = "Java") String topic,
-                                          @RequestParam(value = "timeAvailable", defaultValue = "One Month") String timeAvailable,
-                                          @RequestParam(value = "purpose", defaultValue = "Learning") String purpose,
-                                          @RequestParam(value = "level", defaultValue = "Intermediate") String level,
+    public StudyPlanResponse studyPlanner(@RequestParam(value = "topic", defaultValue = "Kafka") String topic,
+                                          @RequestParam(value = "timeAvailable", defaultValue = "2 weeks") String timeAvailable,
+                                          @RequestParam(value = "purpose", defaultValue = "Interview") String purpose,
+                                          @RequestParam(value = "level", defaultValue = "Beginner") String level,
                                           @RequestParam(value = "notes", defaultValue = "none") String notes) {
         return studyPlanService.studyPlanner(topic, timeAvailable, purpose, level, notes);
 
