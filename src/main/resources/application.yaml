@@ -2,6 +2,13 @@ spring:
   application:
     name: Spring_AI
 
+  mongodb:
+    uri: ${MONGODB_URI}
+
+  data:
+    mongodb:
+      auto-index-creation: true
+
   ai:
     google:
       genai:
@@ -22,6 +29,5 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.springAi.*"
-    listener:
-      retry:
+
 
