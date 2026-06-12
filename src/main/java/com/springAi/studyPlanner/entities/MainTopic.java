@@ -4,6 +4,7 @@ import java.util.List;
 
 public class MainTopic {
 
+    private String topicId;           // assigned by the backend after parsing, never by the LLM
     private String topicName;
     private String estimatedStudyTime;
     private String difficultyLevel;
@@ -14,10 +15,15 @@ public class MainTopic {
     private ResourceSection resources;
 
     private List<String> commonMistakes;
-    private List<String> importantNotes;
-    private List<String> revisionTips;
-    private List<String> practiceAdvice;
-    private List<String> interviewOrExamTips;
+    private List<String> keyTips;
+
+    public String getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(String topicId) {
+        this.topicId = topicId;
+    }
 
     public String getTopicName() {
         return topicName;
@@ -83,35 +89,11 @@ public class MainTopic {
         this.commonMistakes = commonMistakes;
     }
 
-    public List<String> getImportantNotes() {
-        return importantNotes;
+    public List<String> getKeyTips() {
+        return keyTips;
     }
 
-    public void setImportantNotes(List<String> importantNotes) {
-        this.importantNotes = importantNotes;
-    }
-
-    public List<String> getRevisionTips() {
-        return revisionTips;
-    }
-
-    public void setRevisionTips(List<String> revisionTips) {
-        this.revisionTips = revisionTips;
-    }
-
-    public List<String> getPracticeAdvice() {
-        return practiceAdvice;
-    }
-
-    public void setPracticeAdvice(List<String> practiceAdvice) {
-        this.practiceAdvice = practiceAdvice;
-    }
-
-    public List<String> getInterviewOrExamTips() {
-        return interviewOrExamTips;
-    }
-
-    public void setInterviewOrExamTips(List<String> interviewOrExamTips) {
-        this.interviewOrExamTips = interviewOrExamTips;
+    public void setKeyTips(List<String> keyTips) {
+        this.keyTips = keyTips;
     }
 }

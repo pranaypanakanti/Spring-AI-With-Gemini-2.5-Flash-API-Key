@@ -5,12 +5,10 @@ import java.util.List;
 public class StudyPlanResponse {
 
     private GoalOverview goalOverview;
-    private List<MainTopic> learningRoadmap;
-    private PracticeStrategy practiceStrategy;
-    private SuggestedSchedule suggestedSchedule;
-    private List<String> advantages;
-    private List<String> recommendedNextTopics;
-    private List<String> finalRecommendations;
+    private List<MainTopic> mainTopics;
+    private List<String> nextTopics;
+    private List<String> opportunities;
+    private List<String> quickRevision;
 
     public GoalOverview getGoalOverview() {
         return goalOverview;
@@ -20,51 +18,35 @@ public class StudyPlanResponse {
         this.goalOverview = goalOverview;
     }
 
-    public List<MainTopic> getLearningRoadmap() {
-        return learningRoadmap;
+    public List<MainTopic> getMainTopics() {
+        return mainTopics;
     }
 
-    public void setLearningRoadmap(List<MainTopic> learningRoadmap) {
-        this.learningRoadmap = learningRoadmap;
+    public void setMainTopics(List<MainTopic> mainTopics) {
+        this.mainTopics = mainTopics;
     }
 
-    public PracticeStrategy getPracticeStrategy() {
-        return practiceStrategy;
+    public List<String> getNextTopics() {
+        return nextTopics;
     }
 
-    public void setPracticeStrategy(PracticeStrategy practiceStrategy) {
-        this.practiceStrategy = practiceStrategy;
+    public void setNextTopics(List<String> nextTopics) {
+        this.nextTopics = nextTopics;
     }
 
-    public SuggestedSchedule getSuggestedSchedule() {
-        return suggestedSchedule;
+    public List<String> getOpportunities() {
+        return opportunities;
     }
 
-    public void setSuggestedSchedule(SuggestedSchedule suggestedSchedule) {
-        this.suggestedSchedule = suggestedSchedule;
+    public void setOpportunities(List<String> opportunities) {
+        this.opportunities = opportunities;
     }
 
-    public List<String> getAdvantages() {
-        return advantages;
+    public List<String> getQuickRevision() {
+        return quickRevision;
     }
 
-    public void setAdvantages(List<String> advantages) {
-        this.advantages = advantages;
-    }
-
-    public List<String> getRecommendedNextTopics() {
-        return recommendedNextTopics;
-    }
-
-    public void setRecommendedNextTopics(List<String> recommendedNextTopics) {
-        this.recommendedNextTopics = recommendedNextTopics;
-    }
-
-    public List<String> getFinalRecommendations() {
-        return finalRecommendations;
-    }
-
-    public void setFinalRecommendations(List<String> finalRecommendations) {
-        this.finalRecommendations = finalRecommendations;
+    public void setQuickRevision(List<String> quickRevision) {
+        this.quickRevision = quickRevision;
     }
 }
