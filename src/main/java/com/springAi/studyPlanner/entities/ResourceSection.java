@@ -4,31 +4,31 @@ import java.util.List;
 
 public class ResourceSection {
 
-    private List<Resource> articles;
-    private List<Resource> youtubeResources;
-    private List<Resource> additionalResources;
+    private Resource documentation;
+    private List<Resource> youtube;
+    private Resource extra;
 
-    public List<Resource> getArticles() {
-        return articles;
+    public Resource getDocumentation() {
+        return documentation;
     }
 
-    public void setArticles(List<Resource> articles) {
-        this.articles = articles;
+    public void setDocumentation(Resource documentation) {
+        this.documentation = documentation;
     }
 
-    public List<Resource> getYoutubeResources() {
-        return youtubeResources;
+    public List<Resource> getYoutube() {
+        return youtube;
     }
 
-    public void setYoutubeResources(List<Resource> youtubeResources) {
-        this.youtubeResources = youtubeResources;
+    public void setYoutube(List<Resource> youtube) {
+        this.youtube = youtube;
     }
 
-    public List<Resource> getAdditionalResources() {
-        return additionalResources;
+    public Resource getExtra() {
+        return extra;
     }
 
-    public void setAdditionalResources(List<Resource> additionalResources) {
-        this.additionalResources = additionalResources;
+    public void setExtra(Resource extra) {
+        this.extra = extra;
     }
 }
