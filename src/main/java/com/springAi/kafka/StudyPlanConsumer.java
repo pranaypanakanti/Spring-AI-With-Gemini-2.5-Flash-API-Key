@@ -1,7 +1,7 @@
 package com.springAi.kafka;
 
-import com.springAi.studyPlanner.StudyPlanService;
-import com.springAi.studyPlanner.entities.StudyPlanResponse;
+import com.springAi.studyPlanner.job.StudyPlanJob;
+import com.springAi.studyPlanner.job.StudyPlanJobRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,10 +14,10 @@ public class StudyPlanConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(StudyPlanConsumer.class);
 
-    private final StudyPlanService studyPlanService;
+    private final StudyPlanJobRepository jobRepository;
 
-    public StudyPlanConsumer(StudyPlanService studyPlanService) {
-        this.studyPlanService = studyPlanService;
+    public StudyPlanConsumer(StudyPlanJobRepository jobRepository) {
+        this.jobRepository = jobRepository;
     }
 
     @KafkaListener(
@@ -25,20 +25,20 @@ public class StudyPlanConsumer {
             groupId = "study-plan-group",
             concurrency = "2"
     )
-    public void consume(StudyPlanRequest request,
+    public void consume(StudyPlanJobMessage message,
                         @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
 
-        log.info("Received on partition {}: {}", partition, request);
+        log.info("Received job {} on partition {}", message.getJobId(), partition);
 
-        StudyPlanResponse response = studyPlanService.studyPlanner(
-                request.getTopic(),
-                request.getTimeAvailable(),
-                request.getPurpose(),
-                request.getLevel(),
-                request.getNotes()
-        );
+        StudyPlanJob job = jobRepository.findByJobId(message.getJobId()).orElse(null);
+        if (job == null) {
+            log.error("No job found in Mongo for jobId {}", message.getJobId());
+            return;
+        }
 
-        log.info("Plan generated on partition {}: goal={}",
-                partition, response.getGoalOverview().getTopic());
+        log.info("Loaded job {} → status={} topic={}",
+                job.getJobId(), job.getStatus(), job.getInput().getTopic());
+
+        // Step 4 will add: status → PROCESSING, call Gemini, assign IDs, save DONE/FAILED
     }
 }
