@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/study")
-public class StudyPlannerController {
+public class LLMController {
+
+    // this is for testing LLM without kafka
 
     @Autowired
     private StudyPlanService studyPlanService;

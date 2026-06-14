@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MainTopic {
 
-    private String topicId;           // assigned by the backend after parsing, never by the LLM
+    private String topicId;
     private String topicName;
     private String estimatedStudyTime;
     private String difficultyLevel;
