@@ -1,7 +1,9 @@
 package com.springAi.kafka;
 
 import com.springAi.studyPlanner.StudyPlanService;
+import com.springAi.studyPlanner.entities.MainTopic;
 import com.springAi.studyPlanner.entities.StudyPlanResponse;
+import com.springAi.studyPlanner.entities.SubTopic;
 import com.springAi.studyPlanner.job.JobStatus;
 import com.springAi.studyPlanner.job.StudyPlanJob;
 import com.springAi.studyPlanner.job.StudyPlanJobRepository;
@@ -11,6 +13,10 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class StudyPlanConsumer {
@@ -34,7 +40,8 @@ public class StudyPlanConsumer {
     public void consume(StudyPlanJobMessage message,
                         @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
 
-        log.info("Received job {} on partition {}", message.getJobId(), partition);
+        String jobId = message.getJobId();
+        log.info("Received job {} on partition {}", jobId, partition);
 
         StudyPlanJob job = jobRepository.findByJobId(message.getJobId()).orElse(null);
         if (job == null) {
@@ -42,29 +49,66 @@ public class StudyPlanConsumer {
             return;
         }
 
-        log.info("Loaded job {} → status={} topic={}",
-                job.getJobId(), job.getStatus(), job.getInput().getTopic());
-
-        job.setStatus(JobStatus.PROCESSING);
-
-        StudyPlanRequest input = job.getInput();
-
-        StudyPlanResponse response = studyPlanService.studyPlanner(
-                input.getTopic(),
-                input.getTimeAvailable(),
-                input.getPurpose(),
-                input.getLevel(),
-                input.getNotes()
-        );
-
-        if(response != null) {
-            job.setPlan(response);
-            job.setStatus(JobStatus.DONE);
-        } else {
-            job.setStatus(JobStatus.FAILED);
+        if (job.getStatus() == JobStatus.DONE) {
+            log.warn("Job {} already DONE — skipping (idempotency guard)", jobId);
+            return;
         }
 
+        try {
+            job.setStatus(JobStatus.PROCESSING);
+            job.setUpdatedAt(Instant.now());
+            jobRepository.save(job);
 
-        // Step 4 will assign IDs for all sub topics and count them
+            StudyPlanRequest input = job.getInput();
+            StudyPlanResponse plan = studyPlanService.studyPlanner(
+                    input.getTopic(),
+                    input.getTimeAvailable(),
+                    input.getPurpose(),
+                    input.getLevel(),
+                    input.getNotes());
+
+            int totalSubtopics = assignIds(plan);
+
+            job.setPlan(plan);
+            job.setTotalSubtopics(totalSubtopics);
+            job.setStatus(JobStatus.DONE);
+            job.setUpdatedAt(Instant.now());
+            jobRepository.save(job);
+
+            log.info("Job {} DONE → {} subtopics", jobId, totalSubtopics);
+
+        } catch (Exception e) {
+            log.error("Job {} failed: {}", jobId, e.getMessage());
+            job.setStatus(JobStatus.FAILED);
+            job.setUpdatedAt(Instant.now());
+            jobRepository.save(job);
+            throw e;
+        }
     }
+
+    private int assignIds(StudyPlanResponse plan) {
+        int subtopicCount = 0;
+
+        List<MainTopic> mainTopics = plan.getMainTopics();
+        if (mainTopics == null) {
+            return 0;
+        }
+
+        for (MainTopic topic : mainTopics) {
+            topic.setTopicId(UUID.randomUUID().toString());
+
+            List<SubTopic> subTopics = topic.getSubTopics();
+            if (subTopics == null) {
+                continue;
+            }
+            for (SubTopic sub : subTopics) {
+                sub.setSubtopicId(UUID.randomUUID().toString());
+                sub.setDone(false);
+                subtopicCount++;
+            }
+        }
+        return subtopicCount;
+
+    }
+
 }
