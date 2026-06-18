@@ -1,5 +1,6 @@
 package com.springAi.studyPlanner;
 
+import com.springAi.gemini.GeminiKeyManager;
 import com.springAi.studyPlanner.entities.StudyPlanResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +13,10 @@ import java.util.Map;
 @Service
 public class StudyPlanService {
 
-    private static final Logger log = LoggerFactory.getLogger(StudyPlanService.class);
+    private final GeminiKeyManager keyManager;
 
-    private final ChatClient chatClient;
-
-    public StudyPlanService(ChatClient.Builder builder) {
-        this.chatClient = builder.build();
+    public StudyPlanService(GeminiKeyManager keyManager) {
+        this.keyManager = keyManager;
     }
 
     public StudyPlanResponse studyPlanner(String topic,
@@ -94,18 +93,14 @@ and set goalOverview.expectedOutcome to:
         params.put("LEVEL", level);
         params.put("NOTES", notes);
 
-        try {
-            return chatClient.prompt()
-                    .user(u -> {
-                        u.text("Generate a personalized study plan. Topic: {TOPIC} Time Available: {TIME_AVAILABLE} Purpose of Preparation: {PURPOSE} Current Level: {LEVEL} Specific Requests / Notes: {NOTES}");
-                        u.params(params);
-                    })
-                    .system(systemInstruction)
-                    .call()
-                    .entity(StudyPlanResponse.class);
-        } catch (Exception e) {
-            log.error("Failed to execute LLM request for topic {}", topic);
-            return null;
-        }
+        return keyManager.executeWithRotation(chatClient ->
+                chatClient.prompt()
+                        .user(u -> {
+                            u.text("Generate a personalized study plan. Topic: {TOPIC} Time Available: {TIME_AVAILABLE} Purpose of Preparation: {PURPOSE} Current Level: {LEVEL} Specific Requests / Notes: {NOTES}");
+                            u.params(params);
+                        })
+                        .system(systemInstruction)
+                        .call()
+                        .entity(StudyPlanResponse.class));
     }
 }
