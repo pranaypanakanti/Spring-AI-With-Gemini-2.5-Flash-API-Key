@@ -6,6 +6,14 @@ spring:
     uri: ${MONGODB_URI}
     auto-index-creation: true
 
+  data:
+    redis:
+      url: ${REDIS_URI}
+
+  gemini:
+    api-keys: ${GEMINI_API_KEYS}
+    model: gemini-2.5-flash
+
   ai:
     google:
       genai:
