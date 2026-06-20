@@ -25,7 +25,7 @@ public class StudyPlanController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> submit(
-            @RequestParam(defaultValue = "user-1") String userId,
+            @RequestParam String userId,
             @RequestBody StudyPlanRequest input) {
 
         RateLimitResult rl = rateLimitService.tryConsume(userId);
