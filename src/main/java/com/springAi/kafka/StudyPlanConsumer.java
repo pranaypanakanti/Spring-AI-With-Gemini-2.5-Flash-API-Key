@@ -71,6 +71,7 @@ public class StudyPlanConsumer {
 
             job.setPlan(plan);
             job.setTotalSubtopics(totalSubtopics);
+            job.setCompletedSubtopics(0);
             job.setStatus(JobStatus.DONE);
             job.setUpdatedAt(Instant.now());
             jobRepository.save(job);

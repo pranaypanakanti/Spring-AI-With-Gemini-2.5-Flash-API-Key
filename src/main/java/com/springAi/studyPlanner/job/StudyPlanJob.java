@@ -26,10 +26,17 @@ public class StudyPlanJob {
     private boolean startPreparation;
 
     private StudyPlanResponse plan;
+
+
     private int totalSubtopics;
+    private int completedSubtopics;
 
     private Instant createdAt;
     private Instant updatedAt;
+
+    public int getCompletedSubtopics() { return completedSubtopics; }
+
+    public void setCompletedSubtopics(int completedSubtopics) { this.completedSubtopics = completedSubtopics; }
 
     public String getId() {
         return id;

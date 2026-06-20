@@ -8,6 +8,7 @@ public class StudyPlanJobResponse {
     private JobStatus status;
     private boolean startPreparation;
     private int totalSubtopics;
+    private int completedSubtopics;
     private StudyPlanResponse plan;
 
     public static StudyPlanJobResponse from(StudyPlanJob job) {
@@ -16,6 +17,7 @@ public class StudyPlanJobResponse {
         r.status = job.getStatus();
         r.startPreparation = job.isStartPreparation();
         r.totalSubtopics = job.getTotalSubtopics();
+        r.completedSubtopics = job.getCompletedSubtopics();
         r.plan = job.getPlan();
         return r;
     }
@@ -35,6 +37,8 @@ public class StudyPlanJobResponse {
     public int getTotalSubtopics() {
         return totalSubtopics;
     }
+
+    public int getCompletedSubtopics() { return completedSubtopics; }
 
     public StudyPlanResponse getPlan() {
         return plan;
