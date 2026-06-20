@@ -1,5 +1,3 @@
-
-
 spring:
   application:
     name: Spring_AI
@@ -23,10 +21,14 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.springAi.*"
+        
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.model.google.genai.autoconfigure.chat.GoogleGenAiChatAutoConfiguration
 
 
-  gemini:
-    api-keys: ${GEMINI_API_KEYS}
-    model: gemini-2.5-flash
+gemini:
+  api-keys: ${GEMINI_API_KEYS}
+  model: gemini-2.5-flash
 
 

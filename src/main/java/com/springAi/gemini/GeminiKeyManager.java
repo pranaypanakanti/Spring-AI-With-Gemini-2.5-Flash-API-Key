@@ -26,8 +26,8 @@ public class GeminiKeyManager {
     private final StringRedisTemplate redis;
     private final AtomicInteger cursor = new AtomicInteger(0);
 
-    public GeminiKeyManager(@Value("${spring.gemini.api-keys}") List<String> apiKeys,
-                            @Value("${spring.gemini.model:gemini-2.5-flash}") String model,
+    public GeminiKeyManager(@Value("${gemini.api-keys}") List<String> apiKeys,
+                            @Value("${gemini.model:gemini-2.5-flash}") String model,
                             StringRedisTemplate redis) {
         this.redis = redis;
         this.chatClients = apiKeys.stream()
